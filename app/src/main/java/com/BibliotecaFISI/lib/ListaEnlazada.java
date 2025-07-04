@@ -17,20 +17,32 @@ public class ListaEnlazada<T> {
         nodo.prev = ptr;
     }
     public void Insertar(Nodo<T> nodo, int pos) {
-        Nodo<T> ptr = CAB;
-        int i = 1;
-        while (ptr != null && i <= pos) {
-            ptr = ptr.sgte;
-            i++;
+    if (pos <= 1 || CAB == null) {
+        nodo.sgte = CAB;
+        if (CAB != null) {
+            CAB.prev = nodo;
         }
-        if (ptr == null) {
-            CAB = nodo;
-        }
-        else {
-            ptr.sgte = nodo;
-            nodo.prev = ptr;
-        }
+        CAB = nodo;
+        return;
     }
+
+    Nodo<T> ptr = CAB;
+    int i = 1;
+
+    while (ptr.sgte != null && i < pos - 1) {
+        ptr = ptr.sgte;
+        i++;
+    }
+
+    nodo.sgte = ptr.sgte;
+    if (ptr.sgte != null) {
+        ptr.sgte.prev = nodo;
+    }
+
+    ptr.sgte = nodo;
+    nodo.prev = ptr;
+}
+
     public int Buscar(Nodo<T> nodo) {
         Nodo<T> ptr = CAB;
         int i = 1;
@@ -53,22 +65,23 @@ public class ListaEnlazada<T> {
         return ptr;
     }
     public void Eliminar(Nodo<T> nodo) {
-        if (CAB == null) {
-            return;
-        }
+        if (CAB == null || nodo == null) return;
+
         if (CAB == nodo) {
-            CAB = null;
-            return;
-        }
-        Nodo<T> ptr = CAB;
-        while (ptr != null) {
-            if (ptr == nodo) {
-                ptr.prev.sgte = ptr.sgte;
-                return;
-            } else {
-                ptr = ptr.sgte;
+            CAB = nodo.sgte;
+            if (CAB != null) {
+                CAB.prev = null;
             }
+            return;
         }
 
+        if (nodo.prev != null) {
+            nodo.prev.sgte = nodo.sgte;
+        }
+
+        if (nodo.sgte != null) {
+            nodo.sgte.prev = nodo.prev;
+        }
     }
 }
+

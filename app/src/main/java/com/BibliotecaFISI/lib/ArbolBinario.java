@@ -1,7 +1,8 @@
 package com.BibliotecaFISI.lib;
 
-import javax.swing.table.DefaultTableModel;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArbolBinario {
     private Nodo<Ejemplar> R;
@@ -11,36 +12,37 @@ public class ArbolBinario {
     }
 
     public void Insertar(Ejemplar e) {
-        // se usa anterior como izquierda y siguiente como derecha
         if (R == null) {
             R = new Nodo<>(e);
         } else {
             Nodo<Ejemplar> ptr = R;
-            while (ptr.sgte != null && ptr.prev != null) {
+            while (true) {
                 if (e.ISBN < ptr.val.ISBN) {
+                    if (ptr.prev == null) {
+                        ptr.prev = new Nodo<>(e);
+                        return;
+                    }
                     ptr = ptr.prev;
                 } else if (e.ISBN > ptr.val.ISBN) {
+                    if (ptr.sgte == null) {
+                        ptr.sgte = new Nodo<>(e);
+                        return;
+                    }
                     ptr = ptr.sgte;
                 } else {
-                    System.out.println("el isbn ya existe");
+                    System.out.println("El ISBN ya existe");
                     return;
                 }
             }
-            if (e.ISBN < ptr.val.ISBN) {
-                ptr.prev = new Nodo<>(e);
-            } else if (e.ISBN > ptr.val.ISBN) {
-                ptr.sgte = new Nodo<>(e);
-            }
-
         }
     }
 
-    public Nodo<Ejemplar> BuscarPorISBN(Nodo<Ejemplar> ptr, int isbn) {
+    public Nodo<Ejemplar> BuscarPorISBN(Nodo<Ejemplar> ptr, long isbn) {
         if (ptr == null) {
             return null;
         }
         if (ptr.val.ISBN == isbn) {
-            return R;
+            return ptr;
         } else if (isbn < ptr.val.ISBN) {
             return BuscarPorISBN(ptr.prev, isbn);
         } else {
@@ -48,16 +50,47 @@ public class ArbolBinario {
         }
     }
 
-    public void buscarPorTitulo(Nodo<Ejemplar> ptr, String titulo, DefaultTableModel model) {
-        ListaEnlazada<Ejemplar> l = new ListaEnlazada<>();
+    public List<Ejemplar> buscarPorTitulo(String titulo) {
+        List<Ejemplar> res = new ArrayList<>();
+        buscarPorTituloRec(R, res, titulo);
+        return res;
+    }
+
+    private void buscarPorTituloRec(Nodo<Ejemplar> ptr, List<Ejemplar> ejemplares, String titulo) {
         if (ptr != null) {
+            // Recorremos primero el subárbol izquierdo
+            buscarPorTituloRec(ptr.prev, ejemplares, titulo);
+
             if (ptr.val.titulo.toLowerCase().contains(titulo.toLowerCase())) {
-                model.addRow(new Object[]{ptr.val.ISBN, ptr.val.titulo});
+                ejemplares.add(ptr.val);
             }
-            buscarPorTitulo(ptr.prev, titulo, model);
-            buscarPorTitulo(ptr.sgte, titulo, model);
+
+            // Recorremos luego el subárbol derecho
+            buscarPorTituloRec(ptr.sgte, ejemplares, titulo);
         }
     }
+
+    
+    public List<Ejemplar> buscarPorKeywords(String kw) {
+        List<Ejemplar> res = new ArrayList<>();
+        buscarPorKeywordsRec(R, res, kw);
+        return res;
+    }
+
+    private void buscarPorKeywordsRec(Nodo<Ejemplar> ptr, List<Ejemplar> ejemplares, String kw) {
+        if (ptr != null) {
+            // Recorremos primero el subárbol izquierdo
+            buscarPorKeywordsRec(ptr.prev, ejemplares, kw);
+
+            if (ptr.val.palabrasClave.toLowerCase().contains(kw.toLowerCase())) {
+                ejemplares.add(ptr.val);
+            }
+
+            // Recorremos luego el subárbol derecho
+            buscarPorKeywordsRec(ptr.sgte, ejemplares, kw);
+        }
+    }
+    
 
     public void recorrerInorden() {
         recorrerInordenRec(R);

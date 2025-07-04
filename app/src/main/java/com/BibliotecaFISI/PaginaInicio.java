@@ -16,17 +16,17 @@ import java.util.List;
 /**
  * @author Juan Aguilar
  */
-public class BibliotecaFISI extends javax.swing.JFrame {
+public class PaginaInicio extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BibliotecaFISI.class.getName());
-    private static final ArbolBinario ejemplaresAB = new ArbolBinario();
-    private static Usuario usr;
+    private static ArbolBinario ejemplaresAB = new ArbolBinario();
+    private static Usuario usuario;
 
     /**
      * Creates new form BibliotecaFISI
      */
-    public BibliotecaFISI(Usuario usr) {
-        BibliotecaFISI.usr = usr;
+    public PaginaInicio(Usuario usuarioAutenticado) {
+        this.usuario =usuarioAutenticado;
         initComponents();
     }
 
@@ -34,13 +34,8 @@ public class BibliotecaFISI extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ejemplaresAB.Insertar(new Ejemplar(9780143127741L, "Cien años de soledad", "Gabriel García Marquez","realismo mágico, soledad, familia", "Una novela épica que narra la historia de la familia Buendía en el pueblo ficticio de Macondo."));
-        ejemplaresAB.Insertar(new Ejemplar(9780061122415L, "To Kill a Mockingbird", "Harper Lee", "justicia, racismo, moralidad", "La historia de Scout Finch, una niña que crece en un pueblo del sur de los Estados Unidos, y su padre, el abogado Atticus Finch."));
-        ejemplaresAB.Insertar(new Ejemplar(9780156012195L, "1984", "George Orwell", "distopía, totalitarismo, libertad", "En una sociedad totalitaria donde el gobierno controla todos los aspectos de la vida, Winston Smith lucha por encontrar la verdad."));
-        ejemplaresAB.Insertar(new Ejemplar(9780451524935L, "Fahrenheit 451", "Ray Bradbury", "futuro, censura, libros", "En una sociedad futurista, los bomberos queman libros, y Guy Montag, un bombero, comienza a cuestionar este sistema."));
-        ejemplaresAB.Insertar(new Ejemplar(9780393327342L, "Pride and Prejudice", "Jane Austen", "amor, matrimonio, sociedad", "Elizabeth Bennet y el orgulloso Mr. Darcy navegan por malentendidos, diferencias sociales y prejuicios para encontrar el amor verdadero."));
-        ejemplaresAB.Insertar(new Ejemplar(9798335533416L, "Java para Principiantes", "Henry Greg", "Java, programación", "Dominar Java, uno de los lenguajes de programación más demandados, puede abrirte puertas a oportunidades en campos como el desarrollo web, el desarrollo de aplicaciones, el análisis de datos, etc."));
-        ejemplaresAB.Insertar(new Ejemplar(9789688801130L, "Algoritmos y Estructuras de Datos", "Niklaus Wirth", "Java, programación", "Este clásico utiliza el lenguaje Modula-2 para los ejemplos. Además de mostrar un enfoque sistemático y científico del arte de la programación, el texto subraya la importancia del análisis del rendimiento de los programas a través de problemas resueltos."));
+        ejemplaresAB.Insertar(new Ejemplar(12345, "Java para Principiantes"));
+        ejemplaresAB.Insertar(new Ejemplar(67890, "Algoritmos y Estructuras de Datos"));
         ejemplaresAB.Insertar(new Ejemplar(11223, "Patrones de Diseño en Java"));
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -55,7 +50,7 @@ public class BibliotecaFISI extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        EventQueue.invokeLater(() -> new BibliotecaFISI(usr).setVisible(true));
+        EventQueue.invokeLater(() -> new BibliotecaFISI(usuario).setVisible(true));
     }
 
     private JPanel generarPanelResultado(Ejemplar ejemplar) {
@@ -101,7 +96,7 @@ public class BibliotecaFISI extends javax.swing.JFrame {
             panelResultados.removeAll();
             if (modo == 0) {
                 try {
-                    long isbn = Long.parseLong(txt);
+                    int isbn = Integer.parseInt(txt);
                     Nodo<Ejemplar> resultado = ejemplaresAB.BuscarPorISBN(ejemplaresAB.getR(), isbn);
                     if (resultado != null) {
                         JPanel subpanel = generarPanelResultado(resultado.val);
@@ -121,21 +116,7 @@ public class BibliotecaFISI extends javax.swing.JFrame {
                 } else {
                     panelResultados.add(new JLabel("No se encontro libros con el título deseado"));
                 }
-            } else {
-                String[] kws = txt.split(",");
-                boolean encontrado = false;
-                for (String kw : kws){
-                    List<Ejemplar> res = ejemplaresAB.buscarPorKeywords(kw);
-                    if (res != null) {
-                        encontrado = true;
-                    for (Ejemplar e : res) {
-                        panelResultados.add(generarPanelResultado(e));
-                    }
-                }
-                }
-                 if (!encontrado) {
-                    panelResultados.add(new JLabel("No se encontro libros con el título deseado"));
-                }
+
             }
             panelResultados.revalidate();
             panelResultados.repaint();
@@ -242,7 +223,6 @@ public class BibliotecaFISI extends javax.swing.JFrame {
         });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel2.setForeground(java.awt.SystemColor.activeCaptionText);
         jLabel2.setText("Búsqueda de libros");
 
         buscar.setText("Buscar");
@@ -254,7 +234,6 @@ public class BibliotecaFISI extends javax.swing.JFrame {
         });
 
         panelResultados.setBackground(new java.awt.Color(253, 253, 253));
-        panelResultados.setForeground(java.awt.SystemColor.activeCaptionText);
         panelResultados.setPreferredSize(new java.awt.Dimension(700, 450));
         panelResultados.setLayout(new javax.swing.BoxLayout(panelResultados, javax.swing.BoxLayout.Y_AXIS));
 

@@ -1,5 +1,6 @@
 import com.BibliotecaFISI.lib.ArbolBinario;
 import com.BibliotecaFISI.lib.Ejemplar;
+import java.util.List;
 
 public class ArbolBinarioTest {
     public static void main(String[] args) {
@@ -26,5 +27,11 @@ public class ArbolBinarioTest {
         // Mostrar los ejemplares leídos desde el archivo
         System.out.println("\nEjemplares leídos desde el archivo:");
         arbolLeido.recorrerInorden();
+        
+        System.out.println("buscando ejemplares: \"Java\"");
+        List<Ejemplar> res = arbol.buscarPorTitulo("Java");
+        for (Ejemplar e : res) {
+            System.out.println(e.titulo + e.ISBN);
+        }
     }
 }

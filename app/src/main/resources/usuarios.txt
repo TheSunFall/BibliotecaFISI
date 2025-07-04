@@ -1,0 +1,4 @@
+CÓDIGO, CONTRASEÑA, NOMBRE, CORREO, TIPO, DNI
+23200207, 23200207, LUIS RONQUILLO, luis.ronquillo@unmsm.edu.pe, E, 41241241
+23200129, 23200129, JUAN AGUILAR, juan.aguilarl@unmsm.edu.pe, E, 34523432
+23200042, 23200042, Fay, fayrus.pena@unmsm.edu.pe, A, 42523532
